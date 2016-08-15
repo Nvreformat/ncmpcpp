@@ -1,5 +1,6 @@
 #include <array>
 #include <boost/range/detail/any_iterator.hpp>
+#include <boost/algorithm/string.hpp>
 #include <iomanip>
 
 #include "display.h"
@@ -15,9 +16,12 @@
 #include "utility/comparators.h"
 #include "title.h"
 #include "screen_switcher.h"
+#include "screen_type.h"
 
 using Global::MainHeight;
 using Global::MainStartY;
+
+bool done = false;
 
 namespace ph = std::placeholders;
 
@@ -156,26 +160,35 @@ void SearchEngine::QuerySearch()
 	
 	if (w.size() == 0)
 	{
-		w.insertItem(0, SEItem(), NC::List::Properties::Bold | NC::List::Properties::Inactive);
-		w.at(0).value().mkBuffer() << Config.color1 << "Nothing to show..." << NC::Color::Default;
+		Statusbar::printf(2, "No results for '" + itsConstraints[0] + "'");
 	}
 }
 
 void SearchEngine::switchTo()
 {
+	m_previous_screen = Global::myScreen;
+	
 	PromtSearch();
 	
 	if (!itsConstraints[0].empty())
 	{
 		w.clear();
-		SwitchTo::execute(this);
-		
-		drawHeader();
-		
-		w.reset();
-		
 		QuerySearch();
-		markSongsInPlaylist(w);
+		
+		if (w.size() == 1)
+		{
+			addSongToPlaylist(w.current()->value().song(), true);
+		}
+		else if (w.size() > 1)
+		{
+			SwitchTo::execute(this);
+		
+			drawHeader();
+		
+			w.reset();
+			
+			markSongsInPlaylist(w);
+		}	
 	}
 }
 
@@ -218,15 +231,13 @@ bool SearchEngine::find(SearchDirection direction, bool wrap, bool skip_current)
 
 bool SearchEngine::actionRunnable()
 {
-	return !w.empty() && !w.current()->value().isSong();
+	return true;
 }
 
 void SearchEngine::runAction()
 {
-	size_t option = w.choice();
-	
-	if (option > 0)
-		addSongToPlaylist(w.current()->value().song(), true);
+	addSongToPlaylist(w.current()->value().song(), true);
+	m_previous_screen->switchTo();
 }
 
 /***********************************************************************/
@@ -246,6 +257,13 @@ std::vector<MPD::Song> SearchEngine::getSelectedSongs()
 	return w.getSelectedSongs();
 }
 
+
+
+void SearchEngine::refresh()
+{
+	
+}
+
 void SearchEngine::reset()
 {
 	PromtSearch();
@@ -257,10 +275,16 @@ void SearchEngine::reset()
 		
 		QuerySearch();
 		markSongsInPlaylist(w);
+		
+		if (w.size() == 1)
+		{
+			addSongToPlaylist(w.current()->value().song(), true);
+			m_previous_screen->switchTo();
+		}
 	}
 }
 
-void SearchEngine::Search()
+void __attribute__((optimize("O3"))) SearchEngine::Search()
 {
 	if (itsConstraints[0].empty())
 		return;
@@ -272,17 +296,17 @@ void SearchEngine::Search()
 		//w.addItem(std::move(*s));
 	//return;
 	
-	Regex::Regex rx[ConstraintsNumber];
-	for (size_t i = 0; i < ConstraintsNumber; ++i)
+	std::vector<std::string> strs;
+	boost::split(strs, itsConstraints[0], boost::is_any_of(" "));
+	
+	Regex::Regex rx[strs.size()];
+	for (size_t i = 0; i < strs.size(); ++i)
 	{
-		if (!itsConstraints[i].empty())
+		try
 		{
-			try
-			{
-				rx[i] = Regex::make(itsConstraints[i], Config.regex_type);
-			}
-			catch (boost::bad_expression &) { }
+			rx[i] = Regex::make(strs[i], Config.regex_type);
 		}
+		catch (boost::bad_expression &) { }
 	}
 
 	typedef boost::range_detail::any_iterator<
@@ -296,25 +320,36 @@ void SearchEngine::Search()
 	s = input_song_iterator(getDatabaseIterator(Mpd));
 	end = input_song_iterator(MPD::SongIterator());
 
+	
+
 	LocaleStringComparison cmp(std::locale(), Config.ignore_leading_the);
 	for (; s != end; ++s)
 	{
-		bool any_found = true, found = true;
+		bool any_found[strs.size()], found = true;
 
-		if (!rx[0].empty())
-			any_found =
-			   Regex::search(s->getArtist(), rx[0])
-			|| Regex::search(s->getAlbumArtist(), rx[0])
-			|| Regex::search(s->getTitle(), rx[0])
-			|| Regex::search(s->getAlbum(), rx[0])
-			|| Regex::search(s->getName(), rx[0])
-			|| Regex::search(s->getComposer(), rx[0])
-			|| Regex::search(s->getPerformer(), rx[0])
-			|| Regex::search(s->getGenre(), rx[0])
-			|| Regex::search(s->getDate(), rx[0])
-			|| Regex::search(s->getComment(), rx[0]);
-			
-		if (any_found && found)
+		for (size_t i = 0; i < strs.size(); ++i)
+		{
+			if (!rx[i].empty())
+				any_found[i] =
+				   (Regex::search(s->getArtist(), rx[i])
+				|| Regex::search(s->getAlbumArtist(), rx[i])
+				|| Regex::search(s->getTitle(), rx[i])
+				|| Regex::search(s->getAlbum(), rx[i])
+				|| Regex::search(s->getName(), rx[i])
+				|| Regex::search(s->getComposer(), rx[i])
+				|| Regex::search(s->getPerformer(), rx[i])
+				|| Regex::search(s->getGenre(), rx[i])
+				|| Regex::search(s->getDate(), rx[i])
+				|| Regex::search(s->getComment(), rx[i]));
+		}
+		
+		for (size_t i = 0; i < strs.size(); ++i)
+		{
+			if (!any_found[i])
+				found = false;
+		}
+		
+		if (found)
 			w.addItem(*s);
 	}
 		

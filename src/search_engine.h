@@ -108,6 +108,7 @@ struct SearchEngine: Screen<SearchEngineWindow>, HasActions, HasSongs, Searchabl
 	
 	virtual bool isLockable() OVERRIDE { return true; }
 	virtual bool isMergable() OVERRIDE { return true; }
+	virtual void refresh() OVERRIDE;
 	
 	// Searchable implementation
 	virtual bool allowsSearching() OVERRIDE;
@@ -138,6 +139,7 @@ private:
 	void PromtSearch();
 
 	Regex::ItemFilter<SEItem> m_search_predicate;
+	BaseScreen *m_previous_screen;
 	
 	const char **SearchMode;
 	
