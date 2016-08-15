@@ -134,6 +134,8 @@ struct SearchEngine: Screen<SearchEngineWindow>, HasActions, HasSongs, Searchabl
 private:
 	void Prepare();
 	void Search();
+	void QuerySearch();
+	void PromtSearch();
 
 	Regex::ItemFilter<SEItem> m_search_predicate;
 	
@@ -141,7 +143,7 @@ private:
 	
 	static const char *SearchModes[];
 	
-	static const size_t ConstraintsNumber = 11;
+	static const size_t ConstraintsNumber = 1;
 	static const char *ConstraintsNames[];
 	std::string itsConstraints[ConstraintsNumber];
 	
