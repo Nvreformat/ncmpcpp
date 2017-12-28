@@ -635,7 +635,7 @@ bool Configuration::read(const std::vector<std::string> &config_paths, bool igno
 		{
 			set_window_title = false;
 			return option_parser::worker([](std::string) {}, [] {
-				std::clog << "Terminal doesn't support window title, skipping 'enable_window_title'.\n";
+				//std::clog << "Terminal doesn't support window title, skipping 'enable_window_title'.\n";
 			});
 		}
 	}());
