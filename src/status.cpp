@@ -169,7 +169,7 @@ void initialize_status()
 
 	m_status_initialized = true;
 	wFooter->addFDCallback(Mpd.GetFD(), Statusbar::Helpers::mpd);
-	Statusbar::printf("Connected to %1%", Mpd.GetHostname());
+	//Statusbar::printf("Connected to %1%", Mpd.GetHostname());
 }
 
 }
