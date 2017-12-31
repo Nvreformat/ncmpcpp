@@ -1,5 +1,14 @@
 bin_PROGRAMS = ncmpcpp
 ncmpcpp_SOURCES = \
+	bluetooth/gdbus/object.cpp \
+	bluetooth/gdbus/client.cpp \
+	bluetooth/gdbus/polkit.cpp \
+	bluetooth/gdbus/watch.cpp \
+	bluetooth/gdbus/mainloop.cpp \
+	bluetooth/bluetooth.cpp \
+	bluetooth/glibsetup.cpp \
+	bluetooth/player.cpp \
+	bluetooth/main.cpp \
 	utility/comparators.cpp \
 	utility/html.cpp \
 	utility/option_parser.cpp \
@@ -51,12 +60,19 @@ ncmpcpp_SOURCES = \
 	visualizer.cpp \
 	window.cpp
 
+CFLAGS_DBUS = $(shell pkg-config --cflags --libs dbus-1)
+CFLAGS_DBUS_GLIB = $(shell pkg-config --cflags --libs dbus-glib-1)
+
 # set the include path found by configure
-INCLUDES= $(all_includes)
+INCLUDES= $(all_includes) $(CFLAGS_DBUS) $(CFLAGS_DBUS_GLIB)
 
 # the library search path.
-ncmpcpp_LDFLAGS = $(all_libraries)
+ncmpcpp_LDFLAGS = $(all_libraries) -lglib-2.0 -ldbus-1 -lpthread
 noinst_HEADERS = \
+	bluetooth/gdbus/gdbus.h \
+	bluetooth/player.h \
+	bluetooth/glibsetup.h \
+	bluetooth/bluetooth.h \
 	helpers/song_iterator_maker.h \
 	utility/comparators.h \
 	utility/conversion.h \
