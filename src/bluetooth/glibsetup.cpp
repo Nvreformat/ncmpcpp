@@ -21,7 +21,7 @@ namespace Glib
 	pthread_t glibThread;
 	GMainLoop* mainLoop;
 	DBusConnection* dbusConnection;
-	boost::lockfree::queue<PendingEvent> pendingEvents;
+	boost::lockfree::queue<PendingEvent> pendingEvents(128);
 
 	void onConnect(DBusConnection* connection, void* userData) {}
 	void onDisconnect(DBusConnection* connection, void* serData) {}
