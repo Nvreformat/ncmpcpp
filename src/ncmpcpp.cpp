@@ -53,6 +53,8 @@
 
 namespace ph = std::placeholders;
 
+extern bool eventHandler(Glib::Event event, void* param);
+
 namespace
 {
 	std::ofstream errorlog;
@@ -80,30 +82,6 @@ namespace
 		NC::destroyScreen();
 		windowTitle("");
 	}
-}
-
-bool eventHandler(Glib::Event event, void* param)
-{
-	if (event == Glib::Event::AGENT_REGISTERED)
-	{
-		Bluetooth::defaultAgent(); 
-		Bluetooth::setDiscoverable(true);
-	}
-	else if (event == Glib::Event::AUTHORIZE_SERVICE)
-	{
-		return true;
-	}
-	else if (event == Glib::Event::REQUEST_CONFIRMATION)
-	{
-		return true;
-	}
-	else if (event == Glib::Event::DISCOVERABILTY_CHANGE)
-	{
-		if (!param)
-			Bluetooth::setDiscoverable(true);
-	}
-	
-	return false;
 }
 
 int main(int argc, char **argv)
