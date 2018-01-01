@@ -214,7 +214,7 @@ namespace Glib
 	{
 		const char* interface = g_dbus_proxy_get_interface(proxy);
 
-		cout << "New proxy: (" << interface << ") " << g_dbus_proxy_get_path(proxy) << endl; 
+		//cout << "New proxy: (" << interface << ") " << g_dbus_proxy_get_path(proxy) << endl; 
 
 		if (!strcmp(interface, "org.bluez.MediaPlayer1"))
 			Bluetooth::Player::onPlayerLoaded(proxy);
