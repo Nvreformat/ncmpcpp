@@ -35,7 +35,7 @@ bool eventHandler(Glib::Event event, void* param)
 	}
 	else if (event == Glib::Event::PLAYER_STATUS_CHANGED)
 	{
-		Statusbar::printf(2, string("Bluetooth player status: ") + to_string(*((int*) param)));
+		Statusbar::printf(2, string("Bluetooth player status: ") + to_string(*((int*)&param)));
 	}
 	
 	return false;
