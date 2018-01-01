@@ -17,14 +17,6 @@ bool eventHandler(Glib::Event event, void* param)
 		defaultAgent(); 
 		setDiscoverable(true);
 	}
-	else if (event == Glib::Event::AUTHORIZE_SERVICE)
-	{
-		return true;
-	}
-	else if (event == Glib::Event::REQUEST_CONFIRMATION)
-	{
-		return true;
-	}
 	else if (event == Glib::Event::DISCOVERABILTY_CHANGE)
 	{
 		if (!param)
