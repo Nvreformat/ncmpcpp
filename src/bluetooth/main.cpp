@@ -40,7 +40,7 @@ bool eventHandler(Glib::Event event, void* param)
 	{
 		Player::PlayerStatus status = *((Player::PlayerStatus*)&param);
 		
-		Statusbar::printf(2, string("Bluetooth player status: ") + to_string(status));
+		Statusbar::printf(2, "Bluetooth player status: %i", (int) status);
 	}
 	
 	return false;
