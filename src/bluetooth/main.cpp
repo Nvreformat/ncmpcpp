@@ -41,12 +41,12 @@ bool eventHandler(Glib::Event event, void* param)
 		{
 			resume = mpdStatus.playerState() == MPD::PlayerState::psPlay;
 				
-			Mpd.Pause(true);
+			Mpd.Pause__Nocheck(true);
 		}
 		else
 		{
 			if (resume)
-				Mpd.Pause(false);
+				Mpd.Pause__Nocheck(false);
 		}
 		
 		Statusbar::printf(2, "Bluetooth player status: %i", (int) status);

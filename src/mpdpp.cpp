@@ -245,6 +245,16 @@ void Connection::PlayID(int id)
 
 void Connection::Pause(bool state)
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
+	prechecksNoCommandsList();
+	mpd_run_pause(m_connection.get(), state);
+	checkErrors();
+}
+
+void Connection::Pause__Nocheck(bool state)
+{
 	prechecksNoCommandsList();
 	mpd_run_pause(m_connection.get(), state);
 	checkErrors();
@@ -252,6 +262,9 @@ void Connection::Pause(bool state)
 
 void Connection::Toggle()
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_toggle_pause(m_connection.get());
 	checkErrors();
@@ -259,6 +272,9 @@ void Connection::Toggle()
 
 void Connection::Stop()
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_stop(m_connection.get());
 	checkErrors();
@@ -266,6 +282,9 @@ void Connection::Stop()
 
 void Connection::Next()
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_next(m_connection.get());
 	checkErrors();
@@ -273,6 +292,9 @@ void Connection::Next()
 
 void Connection::Prev()
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_previous(m_connection.get());
 	checkErrors();

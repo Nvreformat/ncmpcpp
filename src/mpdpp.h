@@ -490,6 +490,7 @@ struct Connection
 	void Play(int);
 	void PlayID(int);
 	void Pause(bool);
+	void Pause__Nocheck(bool);
 	void Toggle();
 	void Stop();
 	void Next();
