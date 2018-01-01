@@ -33,10 +33,10 @@ namespace Bluetooth
 
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device,DBUS_TYPE_UINT32, &passkey, DBUS_TYPE_INVALID);
 	
-		if (Glib::postEvent(Glib::Event::REQUEST_CONFIRMATION, 0))
+		//Glib::postEvent(Glib::Event::REQUEST_CONFIRMATION, 0)
 			g_dbus_send_reply(conn, msg, DBUS_TYPE_INVALID);
-		else
-			g_dbus_send_error(conn, msg, "org.bluez.Error.Rejected", NULL);
+		//else
+			//g_dbus_send_error(conn, msg, "org.bluez.Error.Rejected", NULL);
 			
 		dbus_message_ref(msg);
 
@@ -51,10 +51,10 @@ namespace Bluetooth
 
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device, DBUS_TYPE_INVALID);
 		
-		if (Glib::postEvent(Glib::Event::REQUEST_AUTHORIZATION, 0))
+		//Glib::postEvent(Glib::Event::REQUEST_AUTHORIZATION, 0)
 			g_dbus_send_reply(conn, msg, DBUS_TYPE_INVALID);
-		else
-			g_dbus_send_error(conn, msg, "org.bluez.Error.Rejected", NULL);
+		//else
+			//g_dbus_send_error(conn, msg, "org.bluez.Error.Rejected", NULL);
 		
 		dbus_message_ref(msg);
 
@@ -68,10 +68,10 @@ namespace Bluetooth
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device, DBUS_TYPE_STRING, &uuid, DBUS_TYPE_INVALID);
 		
 		//printf("Authorize service %s %s\n", device, uuid);
-		if (Glib::postEvent(Glib::Event::AUTHORIZE_SERVICE, 0) && Player::getPlayer() == NULL)
+		//if (Glib::postEvent(Glib::Event::AUTHORIZE_SERVICE, 0) && Player::getPlayer() == NULL)
 			g_dbus_send_reply(conn, msg, DBUS_TYPE_INVALID);
-		else
-			g_dbus_send_error(conn, msg, "org.bluez.Error.Rejected", NULL);
+		//else
+			//g_dbus_send_error(conn, msg, "org.bluez.Error.Rejected", NULL);
 		dbus_message_ref(msg);
 
 		return NULL;

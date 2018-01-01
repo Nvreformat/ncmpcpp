@@ -2,6 +2,7 @@
 
 #include <string>
 #include "gdbus/gdbus.h"
+#include <boost/lockfree/queue.hpp>
 
 namespace Glib
 {
@@ -17,8 +18,16 @@ namespace Glib
 		PLAYER_STATUS_CHANGED,
 	};
 	
-	bool postEvent(Event event, void* param);
-	void setup(bool (*handler)(Event, void*));
+	struct PendingEvent
+	{
+		Event event;
+		void* param;
+	};
+	
+	extern boost::lockfree::queue<PendingEvent> pendingEvents;
+	
+	void postEvent(Event event, void* param);
+	void setup();
 	DBusConnection* getDbusConnection();
 	void processIter(std::string name, DBusMessageIter* iter, void (*callback)(std::string, int, void*));
 }

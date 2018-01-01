@@ -21,7 +21,7 @@ namespace Glib
 	pthread_t glibThread;
 	GMainLoop* mainLoop;
 	DBusConnection* dbusConnection;
-	bool (*eventHandler)(Event, void*);
+	boost::lockfree::queue<PendingEvent> pendingEvents;
 
 	void onConnect(DBusConnection* connection, void* userData) {}
 	void onDisconnect(DBusConnection* connection, void* serData) {}
@@ -263,19 +263,12 @@ namespace Glib
 		return 0;
 	}
 	
-	bool postEvent(Event event, void* param)
+	void postEvent(Event event, void* param)
 	{
-		if (eventHandler == NULL)
-		{
-			cout << "Event handler is null" << endl;
-			
-			return false;
-		}
-	
-		return eventHandler(event, param);
+		pendingEvents.push((PendingEvent) {event, param});
 	}
 
-	void setup(bool (*handler)(Event, void*)) { eventHandler = handler; pthread_create(&glibThread, NULL, glibThreadFunction, NULL); }
+	void setup() { pthread_create(&glibThread, NULL, glibThreadFunction, NULL); }
 	DBusConnection* getDbusConnection() { return dbusConnection; }
 }
 

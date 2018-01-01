@@ -4,7 +4,7 @@
 #include "mpdpp.h"
 #include "player.h"
 #include <iostream>
-#include <boost/lockfree/queue.hpp>
+
 
 using namespace std;
 using namespace Bluetooth;

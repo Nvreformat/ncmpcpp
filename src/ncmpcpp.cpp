@@ -171,7 +171,7 @@ int main(int argc, char **argv)
 		Actions::get(Actions::Type::UpdateEnvironment)
 	);
 	
-	Glib::setup(eventHandler);
+	Glib::setup();
 	
 	while (!Actions::ExitMainLoop)
 	{
@@ -179,6 +179,10 @@ int main(int argc, char **argv)
 		{
 			if (!Mpd.Connected() && Timer - connect_attempt > boost::posix_time::seconds(1))
 			{
+				Glib::PendingEvent pendingEvent;
+				while (Glib::pendingEvents.pop(pendingEvent))
+					eventHandler(pendingEvent.event, pendingEvent.param);
+				
 				connect_attempt = Timer;
 				// reset local status info
 				Status::clear();
