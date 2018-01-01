@@ -39,9 +39,22 @@ bool eventHandler(Glib::Event event, void* param)
 	}
 	else if (event == Glib::Event::PLAYER_STATUS_CHANGED)
 	{
+		static bool resume = false;
+		
+		MPD::Status mpdStatus = Mpd.getStatus();
 		PlayerStatus status = *((PlayerStatus*)&param);
 		
-		
+		if (status == PLAYING)
+		{
+			resume = mpdStatus.playerState() == MPD::PlayerState::psPlay;
+				
+			Mpd.Pause(true);
+		}
+		else
+		{
+			if (resume)
+				Mpd.Pause(false);
+		}
 		
 		Statusbar::printf(2, "Bluetooth player status: %i", (int) status);
 	}
