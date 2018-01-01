@@ -1,13 +1,12 @@
 #include "glibsetup.h"
 #include "bluetooth.h"
+#include "statusbar.h"
 #include <iostream>
 
 using namespace std;
 
 bool eventHandler(Glib::Event event, void* param)
 {
-	cout << "eventirijillo " << event << endl;
-	
 	if (event == Glib::Event::AGENT_REGISTERED)
 	{
 		Bluetooth::defaultAgent(); 
@@ -28,11 +27,11 @@ bool eventHandler(Glib::Event event, void* param)
 	}
 	else if (event == Glib::Event::DEVICE_CONNECTED)
 	{
-		
+		Statusbar::printf(2, "Bluetooth connected");
 	}
 	else if (event == Glib::Event::DEVICE_DISCONNECTED)
 	{
-		
+		Statusbar::printf(2, "Bluetooth disconnected");
 	}
 	
 	return false;
