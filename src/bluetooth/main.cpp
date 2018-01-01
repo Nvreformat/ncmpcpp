@@ -26,6 +26,14 @@ bool eventHandler(Glib::Event event, void* param)
 		if (!param)
 			Bluetooth::setDiscoverable(true);
 	}
+	else if (event == Glib::Event::DEVICE_CONNECTED)
+	{
+		
+	}
+	else if (event == Glib::Event::DEVICE_DISCONNECTED)
+	{
+		
+	}
 	
 	return false;
 }

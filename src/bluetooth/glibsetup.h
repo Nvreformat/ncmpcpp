@@ -12,6 +12,8 @@ namespace Glib
 		REQUEST_AUTHORIZATION,
 		REQUEST_CONFIRMATION,
 		DISCOVERABILTY_CHANGE,
+		DEVICE_CONNECTED,
+		DEVICE_DISCONNECTED,
 	};
 	
 	bool postEvent(Event event, void* param);
