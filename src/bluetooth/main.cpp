@@ -1,16 +1,19 @@
 #include "glibsetup.h"
 #include "bluetooth.h"
 #include "statusbar.h"
+#include "mpdpp.h"
+#include "player.h"
 #include <iostream>
 
 using namespace std;
+using namespace Bluetooth;
 
 bool eventHandler(Glib::Event event, void* param)
 {
 	if (event == Glib::Event::AGENT_REGISTERED)
 	{
-		Bluetooth::defaultAgent(); 
-		Bluetooth::setDiscoverable(true);
+		defaultAgent(); 
+		setDiscoverable(true);
 	}
 	else if (event == Glib::Event::AUTHORIZE_SERVICE)
 	{
@@ -23,7 +26,7 @@ bool eventHandler(Glib::Event event, void* param)
 	else if (event == Glib::Event::DISCOVERABILTY_CHANGE)
 	{
 		if (!param)
-			Bluetooth::setDiscoverable(true);
+			setDiscoverable(true);
 	}
 	else if (event == Glib::Event::DEVICE_CONNECTED)
 	{
@@ -35,7 +38,9 @@ bool eventHandler(Glib::Event event, void* param)
 	}
 	else if (event == Glib::Event::PLAYER_STATUS_CHANGED)
 	{
-		Statusbar::printf(2, string("Bluetooth player status: ") + to_string(*((int*)&param)));
+		Player::PlayerStatus status = *((Player::PlayerStatus*)&param);
+		
+		Statusbar::printf(2, string("Bluetooth player status: ") + to_string(status));
 	}
 	
 	return false;
