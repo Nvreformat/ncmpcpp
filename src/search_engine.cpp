@@ -177,7 +177,7 @@ void SearchEngine::switchTo()
 		
 		if (w.size() == 1)
 		{
-			addSongToPlaylist(w.current()->value().song(), true);
+			//addSongToPlaylist(w.current()->value().song(), true);
 		}
 		else if (w.size() > 1)
 		{
@@ -236,7 +236,7 @@ bool SearchEngine::actionRunnable()
 
 void SearchEngine::runAction()
 {
-	addSongToPlaylist(w.current()->value().song(), true);
+	//addSongToPlaylist(w.current()->value().song(), true);
 	m_previous_screen->switchTo();
 }
 
@@ -278,7 +278,7 @@ void SearchEngine::reset()
 		
 		if (w.size() == 1)
 		{
-			addSongToPlaylist(w.current()->value().song(), true);
+			//addSongToPlaylist(w.current()->value().song(), true);
 			m_previous_screen->switchTo();
 		}
 	}
