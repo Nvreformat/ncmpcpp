@@ -178,11 +178,7 @@ int main(int argc, char **argv)
 		try
 		{
 			if (!Mpd.Connected() && Timer - connect_attempt > boost::posix_time::seconds(1))
-			{
-				Glib::PendingEvent pendingEvent;
-				while (Glib::pendingEvents.pop(pendingEvent))
-					eventHandler(pendingEvent.event, pendingEvent.param);
-				
+			{		
 				connect_attempt = Timer;
 				// reset local status info
 				Status::clear();
@@ -201,6 +197,13 @@ int main(int argc, char **argv)
 				{
 					Status::handleClientError(e);
 				}
+			}
+			
+			if (Mpd.Connected())
+			{
+				Glib::PendingEvent pendingEvent;
+				while (Glib::pendingEvents.pop(pendingEvent))
+					eventHandler(pendingEvent.event, pendingEvent.param);
 			}
 
 			if (run_resize_screen)
