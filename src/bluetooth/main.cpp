@@ -33,6 +33,11 @@ bool eventHandler(Glib::Event event, void* param)
 	{
 		Statusbar::printf(2, "Bluetooth disconnected");
 	}
+	else if (event == Glib::Event::PLAYER_STATUS_CHANGED)
+	{
+		
+		Statusbar::printf(2, "Bluetooth player status: %u", *((unsigned int*) param));
+	}
 	
 	return false;
 }

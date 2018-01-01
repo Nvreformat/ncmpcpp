@@ -14,6 +14,7 @@ namespace Glib
 		DISCOVERABILTY_CHANGE,
 		DEVICE_CONNECTED,
 		DEVICE_DISCONNECTED,
+		PLAYER_STATUS_CHANGED,
 	};
 	
 	bool postEvent(Event event, void* param);

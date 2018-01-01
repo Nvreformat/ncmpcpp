@@ -77,12 +77,20 @@ namespace Bluetooth
 				
 				if (name == "Status")
 				{
+					static PlayerStatus lastStatus = STOPPED;
+					
 					if (str == "playing")
 						status.status = PLAYING;
 					else if (str == "paused")
 						status.status = PAUSED;
 					else
 						status.status = STOPPED;
+						
+					if (status.status != lastStatus)
+					{
+						lastStatus = status.status;
+						Glib::postEvent(Glib::Event::PLAYER_STATUS_CHANGED, (void*) status.status);
+					}
 				}
 				else if (name == "Title")
 					status.title = str;
@@ -116,7 +124,7 @@ namespace Bluetooth
 		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); }
 		void onPlayerUnloaded(GDBusProxy* proxy) { player = NULL; Glib::postEvent(Glib::Event::DEVICE_DISCONNECTED, (void*) proxy); }
 		GDBusProxy* getPlayer() { return player; }
-		bool isPlaying() { return status.status == PLAYING; }
+		bool isPlaying() { return player != NULL && status.status == PLAYING; }
 		Status& getStatus() { return status; }
 	}
 }
