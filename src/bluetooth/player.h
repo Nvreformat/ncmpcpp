@@ -40,6 +40,7 @@ namespace Bluetooth
 		void next();
 		void previous();
 		GDBusProxy* getPlayer();
+		bool isPlaying();
 		
 		Status& getStatus();
 	}

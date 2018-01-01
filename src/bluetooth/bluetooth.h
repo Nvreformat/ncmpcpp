@@ -1,6 +1,7 @@
 #pragma once
 
 #include "gdbus/gdbus.h"
+#include <string>
 
 namespace Bluetooth
 {
@@ -8,6 +9,7 @@ namespace Bluetooth
 	void setAgentEnabled(bool enabled);
 	void setDiscoverable(bool discoverable);
 	void setPairable(bool pairable);
+	std::string getName();
 	
 	void onDeviceLoaded(GDBusProxy* proxy);
 	void onAdapterLoaded(GDBusProxy* proxy);

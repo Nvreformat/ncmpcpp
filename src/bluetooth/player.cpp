@@ -116,6 +116,7 @@ namespace Bluetooth
 		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); }
 		void onPlayerUnloaded(GDBusProxy* proxy) { player = NULL; Glib::postEvent(Glib::Event::DEVICE_DISCONNECTED, (void*) proxy); }
 		GDBusProxy* getPlayer() { return player; }
+		bool isPlaying() { return status.status == PLAYING; }
 		Status& getStatus() { return status; }
 	}
 }

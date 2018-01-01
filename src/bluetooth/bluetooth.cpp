@@ -67,7 +67,7 @@ namespace Bluetooth
 
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device, DBUS_TYPE_STRING, &uuid, DBUS_TYPE_INVALID);
 		
-		//printf("Authorize service %s %s\n", device, uuid);
+		printf("Authorize service %s %s\n", device, uuid);
 		if (Glib::postEvent(Glib::Event::AUTHORIZE_SERVICE, 0) && Player::getPlayer() == NULL)
 			g_dbus_send_reply(conn, msg, DBUS_TYPE_INVALID);
 		else
