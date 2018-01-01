@@ -7,6 +7,7 @@
 
 using namespace std;
 using namespace Bluetooth;
+using namespace Bluetooth::Player;
 
 bool eventHandler(Glib::Event event, void* param)
 {
@@ -38,7 +39,9 @@ bool eventHandler(Glib::Event event, void* param)
 	}
 	else if (event == Glib::Event::PLAYER_STATUS_CHANGED)
 	{
-		Player::PlayerStatus status = *((Player::PlayerStatus*)&param);
+		PlayerStatus status = *((PlayerStatus*)&param);
+		
+		
 		
 		Statusbar::printf(2, "Bluetooth player status: %i", (int) status);
 	}
