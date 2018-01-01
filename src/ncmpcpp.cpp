@@ -47,6 +47,9 @@
 #include "visualizer.h"
 #include "title.h"
 #include "utility/conversion.h"
+#include "bluetooth/glibsetup.h"
+#include "bluetooth/bluetooth.h"
+#include <string>
 
 namespace ph = std::placeholders;
 
@@ -77,6 +80,30 @@ namespace
 		NC::destroyScreen();
 		windowTitle("");
 	}
+}
+
+bool eventHandler(Glib::Event event, void* param)
+{
+	if (event == Glib::Event::AGENT_REGISTERED)
+	{
+		Bluetooth::defaultAgent(); 
+		Bluetooth::setDiscoverable(true);
+	}
+	else if (event == Glib::Event::AUTHORIZE_SERVICE)
+	{
+		return true;
+	}
+	else if (event == Glib::Event::REQUEST_CONFIRMATION)
+	{
+		return true;
+	}
+	else if (event == Glib::Event::DISCOVERABILTY_CHANGE)
+	{
+		if (!param)
+			Bluetooth::setDiscoverable(true);
+	}
+	
+	return false;
 }
 
 int main(int argc, char **argv)
@@ -165,6 +192,8 @@ int main(int argc, char **argv)
 	auto update_environment = static_cast<Actions::UpdateEnvironment &>(
 		Actions::get(Actions::Type::UpdateEnvironment)
 	);
+	
+	Glib::setup(eventHandler);
 	
 	while (!Actions::ExitMainLoop)
 	{

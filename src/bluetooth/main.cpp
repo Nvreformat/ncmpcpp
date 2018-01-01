@@ -4,7 +4,7 @@
 
 using namespace std;
 
-bool eventHandler(Glib::Event event, void* param)
+bool eventHandler2(Glib::Event event, void* param)
 {
 	cout << "eventirijillo " << event << endl;
 	
@@ -32,7 +32,7 @@ bool eventHandler(Glib::Event event, void* param)
 
 int main2(int argc, char** argv)
 {
-	Glib::setup(eventHandler);
+	//Glib::setup(eventHandler);
 	
 	while(1);
 
