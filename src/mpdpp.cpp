@@ -22,6 +22,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <map>
+#include "bluetooth/player.h"
 
 #include "charset.h"
 #include "mpdpp.h"
@@ -214,6 +215,9 @@ void Connection::UpdateDirectory(const std::string &path)
 
 void Connection::Play()
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_play(m_connection.get());
 	checkErrors();
@@ -221,6 +225,9 @@ void Connection::Play()
 
 void Connection::Play(int pos)
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_play_pos(m_connection.get(), pos);
 	checkErrors();
@@ -228,6 +235,9 @@ void Connection::Play(int pos)
 
 void Connection::PlayID(int id)
 {
+	if (Bluetooth::Player::isPlaying())
+		return;
+	
 	prechecksNoCommandsList();
 	mpd_run_play_id(m_connection.get(), id);
 	checkErrors();
