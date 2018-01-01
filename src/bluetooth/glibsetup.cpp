@@ -108,7 +108,7 @@ namespace Glib
 		DBusMessageIter subiter;
 		if (iter == NULL)
 		{
-			cout << "A " << name << "is nil" << endl;
+			//cout << "A " << name << "is nil" << endl;
 			return;
 		}
 
@@ -117,34 +117,34 @@ namespace Glib
 		switch (type)
 		{
 		case DBUS_TYPE_INVALID:
-			cout << "B " << name << "is invalid" << endl;
+			//cout << "B " << name << "is invalid" << endl;
 			break;
 		case DBUS_TYPE_STRING:
 		case DBUS_TYPE_OBJECT_PATH:
 			dbus_message_iter_get_basic(iter, &valstr);
 			str = string(valstr);
 			callback(name, type, (void*) valstr);
-			cout << "C " << name << ": " << valstr << endl;
+			//cout << "C " << name << ": " << valstr << endl;
 			break;
 		case DBUS_TYPE_BOOLEAN:
 			dbus_message_iter_get_basic(iter, &valbool);
 			callback(name, type, (void*) valbool);
-			cout << "D " << name << ": " << (valbool == TRUE ? "yes" : "no") << endl;
+			//cout << "D " << name << ": " << (valbool == TRUE ? "yes" : "no") << endl;
 			break;
 		case DBUS_TYPE_UINT32:
 			dbus_message_iter_get_basic(iter, &valu32);
 			callback(name, type, (void*) valu32);
-			cout << "E " << name << ": " << valu32 << endl;
+			//cout << "E " << name << ": " << valu32 << endl;
 			break;
 		case DBUS_TYPE_UINT16:
 			dbus_message_iter_get_basic(iter, &valu16);
 			callback(name, type, (void*) valu16);
-			cout << "F " << name << ": " << valu16 << endl;
+			//cout << "F " << name << ": " << valu16 << endl;
 			break;
 		case DBUS_TYPE_INT16:
 			dbus_message_iter_get_basic(iter, &vals16);
 			callback(name, type, (void*) vals16);
-			cout << "G " << name << ": " << vals16 << endl;
+			//cout << "G " << name << ": " << vals16 << endl;
 			break;
 		case DBUS_TYPE_VARIANT:
 			dbus_message_iter_recurse(iter, &subiter);

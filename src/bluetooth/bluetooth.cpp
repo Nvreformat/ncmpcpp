@@ -28,8 +28,8 @@ namespace Bluetooth
 		const char *device;
 		dbus_uint32_t passkey;
 
-		printf("Request confirmation\n");
-		printf("Passkey %u\n", passkey);
+		//printf("Request confirmation\n");
+		//printf("Passkey %u\n", passkey);
 
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device,DBUS_TYPE_UINT32, &passkey, DBUS_TYPE_INVALID);
 	
@@ -47,7 +47,7 @@ namespace Bluetooth
 	{
 		const char *device;
 
-		printf("Request authorization\n");
+		//printf("Request authorization\n");
 
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device, DBUS_TYPE_INVALID);
 		
@@ -67,7 +67,7 @@ namespace Bluetooth
 
 		dbus_message_get_args(msg, NULL, DBUS_TYPE_OBJECT_PATH, &device, DBUS_TYPE_STRING, &uuid, DBUS_TYPE_INVALID);
 		
-		printf("Authorize service %s %s\n", device, uuid);
+		//printf("Authorize service %s %s\n", device, uuid);
 		if (Glib::postEvent(Glib::Event::AUTHORIZE_SERVICE, 0) && Player::getPlayer() == NULL)
 			g_dbus_send_reply(conn, msg, DBUS_TYPE_INVALID);
 		else
@@ -79,7 +79,7 @@ namespace Bluetooth
 
 	DBusMessage* cancel_request(DBusConnection *conn, DBusMessage *msg, void *user_data)
 	{
-		printf("Request canceled\n");
+		//printf("Request canceled\n");
 		
 		dbus_message_unref(msg);
 
@@ -104,10 +104,10 @@ namespace Bluetooth
 	{
 		char* str = (char*) userData;
 
-		if (dbus_error_is_set(error))
-			printf("Failed to set %s: %s\n", str, error->name);
-		else
-			printf("Changing %s succeeded\n", str);
+		//if (dbus_error_is_set(error))
+			//printf("Failed to set %s: %s\n", str, error->name);
+		//else
+			//printf("Changing %s succeeded\n", str);
 	}
 	
 	void register_agent_setup(DBusMessageIter* iter, void* userData)
@@ -129,17 +129,17 @@ namespace Bluetooth
 		if (dbus_set_error_from_message(&error, message) == FALSE)
 		{
 			agentRegistered = true;
-			printf("Agent registered\n");
+			//printf("Agent registered\n");
 			
 			Glib::postEvent(Glib::Event::AGENT_REGISTERED, 0);
 		}
 		else
 		{
-			printf("Failed to register agent: %s\n", error.name);
+			//printf("Failed to register agent: %s\n", error.name);
 			dbus_error_free(&error);
 
-			if (g_dbus_unregister_interface(conn, AGENT_PATH, AGENT_INTERFACE) == FALSE)
-				printf("Failed to unregister agent object\n");
+			g_dbus_unregister_interface(conn, AGENT_PATH, AGENT_INTERFACE);
+				//printf("Failed to unregister agent object\n");
 		}
 	}
 	
@@ -159,14 +159,14 @@ namespace Bluetooth
 		if (dbus_set_error_from_message(&error, message) == FALSE)
 		{
 			agentRegistered = false;
-			printf("Agent unregistered\n");
+			//printf("Agent unregistered\n");
 
-			if (g_dbus_unregister_interface(conn, AGENT_PATH, AGENT_INTERFACE) == FALSE)
-				printf("Failed to unregister agent object\n");
+			g_dbus_unregister_interface(conn, AGENT_PATH, AGENT_INTERFACE);
+				//printf("Failed to unregister agent object\n");
 		}
 		else
 		{
-			printf("Failed to unregister agent: %s\n", error.name);
+			//printf("Failed to unregister agent: %s\n", error.name);
 			dbus_error_free(&error);
 		}
 	}
@@ -181,13 +181,13 @@ namespace Bluetooth
 			{
 				if (g_dbus_register_interface(connection, AGENT_PATH, AGENT_INTERFACE, (const GDBusMethodTable*)(methods), NULL, NULL, NULL, NULL) == FALSE)
 				{
-					printf("Failed to register agent object\n");
+					//printf("Failed to register agent object\n");
 					return;
 				}
 
 				if (g_dbus_proxy_method_call(agentManager, "RegisterAgent", register_agent_setup, register_agent_reply, NULL, NULL) == FALSE)
 				{
-					printf("Failed to call register agent method\n");
+					//printf("Failed to call register agent method\n");
 					return;
 				}
 			}
@@ -195,7 +195,7 @@ namespace Bluetooth
 			{
 				if (g_dbus_proxy_method_call(agentManager, "UnregisterAgent", unregister_agent_setup, unregister_agent_reply, NULL, NULL) == FALSE)
 				{
-					printf("Failed to call unregister agent method\n");
+					//printf("Failed to call unregister agent method\n");
 					return;
 				}
 			}
@@ -217,25 +217,25 @@ namespace Bluetooth
 
 		if (dbus_set_error_from_message(&error, message) == TRUE)
 		{
-			printf("Failed to request default agent: %s\n", error.name);
+			//printf("Failed to request default agent: %s\n", error.name);
 			dbus_error_free(&error);
 			return;
 		}
 
-		printf("Default agent request successful\n");
+		//printf("Default agent request successful\n");
 	}
 
 	void defaultAgent()
 	{
 		if (!agentRegistered)
 		{
-			printf("No agent is registered\n");
+			//printf("No agent is registered\n");
 			return;
 		}
 
 		if (g_dbus_proxy_method_call(agentManager, "RequestDefaultAgent", request_default_setup, request_default_reply, NULL, NULL) == FALSE)
 		{
-			printf("Failed to call request default agent method\n");
+			//printf("Failed to call request default agent method\n");
 			return;
 		}
 	}

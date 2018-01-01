@@ -28,10 +28,10 @@ namespace Bluetooth
 			DBusError error;
 			dbus_error_init(&error);
 
-			if (dbus_set_error_from_message(&error, message) != TRUE)
-				printf("%s SUCCESS\n", (char*) userData);
-			else
-				printf("%s FAILED\n", (char*) userData);
+			dbus_set_error_from_message(&error, message); //!= TRUE)
+				//printf("%s SUCCESS\n", (char*) userData);
+			//else
+				//printf("%s FAILED\n", (char*) userData);
 		}
 
 		void pause()
