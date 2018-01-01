@@ -53,6 +53,7 @@
 
 namespace ph = std::placeholders;
 
+
 extern bool eventHandler(Glib::Event event, void* param);
 
 namespace
