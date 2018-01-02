@@ -43,6 +43,7 @@
 #include "visualizer.h"
 #include "title.h"
 #include "utility/string.h"
+#include <iostream>
 #include "bluetooth/player.h"
 
 using Global::myScreen;
@@ -621,7 +622,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 
 	drawTitle(np);
 	
-	if (Statusbar::isUnlocked() && Config.statusbar_visibility)
+	//if (Statusbar::isUnlocked() && Config.statusbar_visibility)
 	{
 		if (Config.display_bitrate && m_kbps)
 		{
@@ -647,6 +648,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		tracklength += "]";
 		NC::WBuffer np_song;
 		
+		//std::cout << (m_elapsed_time / 10) << std::endl;
+		
 		
 		if (Bluetooth::Player::isPlaying())
 		{			
@@ -662,7 +665,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			
 		*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
 		writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
-		//*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
+		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
 	}
 
 	if (Progressbar::isUnlocked())
