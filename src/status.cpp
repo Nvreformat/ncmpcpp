@@ -618,8 +618,6 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL;
 		return;
 	}
-	
-	cerr << "a" << endl;
 
 	if (update_elapsed)
 	{
@@ -630,9 +628,11 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		
 		if (Bluetooth::Player::isPlaying())
 		{
-			cerr << "b" << endl;
+			cerr << "b " <<  playerStatus.position << endl;
 			
 			playerStatus.position += 1000;
+			
+			cerr << "c " <<  playerStatus.position << endl;
 		}
 	}
 
@@ -692,6 +692,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
 		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
 	}
+
+	cerr << "d " <<  playerStatus.position << endl;
 
 	if (Progressbar::isUnlocked())
 		Progressbar::draw(currentTime, totalTime);
