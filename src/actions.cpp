@@ -2882,6 +2882,9 @@ void seek()
 		*wFooter << NC::Format::Bold;
 		std::string tracklength;
 		// FIXME: merge this with the code in status.cpp
+		
+		/*
+		
 		switch (Config.design)
 		{
 			case Design::Classic:
@@ -2914,6 +2917,7 @@ void seek()
 		}
 		*wFooter << NC::Format::NoBold;
 		Progressbar::draw(currentTime, totalTime);
+		*/
 		wFooter->refresh();
 	}
 	SeekingInProgress = false;
