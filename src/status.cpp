@@ -604,7 +604,15 @@ std::wstring stringToWstring(std::string t)
 
 void Status::Changes::elapsedTime(bool update_elapsed)
 {
+	unsigned totalTime = m_total_time;
+	unsigned currentTime = m_elapsed_time;
+	Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
 	
+	if (Bluetooth::Player::isPlaying())
+	{
+		totalTime = playerStatus.duration / 1000;
+		currentTime = playerStatus.position / 1000;
+	}
 	
 	auto np = myPlaylist->nowPlayingSong();
 	if (m_player_state == MPD::psStop || np.empty())
@@ -619,12 +627,13 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	{
 		auto st = Mpd.getStatus();
 		m_elapsed_time = st.elapsedTime();
+		currentTime = m_elapsed_time;
 		m_kbps = st.kbps();
 	}
 
 	std::string ps = playerStateToString(m_player_state);
 	std::string tracklength;
-	Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
+	
 
 	drawTitle(np);
 	
@@ -637,25 +646,23 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			tracklength += " kbps) ";
 		}
 		tracklength += "[";
-		if (m_total_time)
+		if (totalTime)
 		{
 			if (Config.display_remaining_time)
 			{
 				tracklength += "-";
-				tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time);
+				tracklength += MPD::Song::ShowTime(totalTime-currentTime);
 			}
 			else
-				tracklength += MPD::Song::ShowTime(m_elapsed_time);
+				tracklength += MPD::Song::ShowTime(currentTime);
 			tracklength += "/";
-			tracklength += MPD::Song::ShowTime(m_total_time);
+			tracklength += MPD::Song::ShowTime(totalTime);
 		}
 		else
-			tracklength += MPD::Song::ShowTime(m_elapsed_time);
+			tracklength += MPD::Song::ShowTime(currentTime);
 		tracklength += "]";
+		
 		NC::WBuffer np_song;
-		
-		
-		
 		
 		if (Bluetooth::Player::isPlaying())
 		{			
@@ -675,7 +682,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	}
 
 	if (Progressbar::isUnlocked())
-		Progressbar::draw(m_elapsed_time, m_total_time);
+		Progressbar::draw(currentTime, totalTime);
 }
 
 
