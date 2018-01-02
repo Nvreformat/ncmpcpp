@@ -608,7 +608,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 {
 	unsigned totalTime = m_total_time;
 	unsigned currentTime = m_elapsed_time;
-	Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
+	Bluetooth::Player::Status& playerStatus = Bluetooth::Player::getStatus();
 	
 	auto np = myPlaylist->nowPlayingSong();
 	if (m_player_state == MPD::psStop || np.empty())
