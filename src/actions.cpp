@@ -2811,6 +2811,8 @@ void scrollTagDownRun(NC::List *list, SongList *songs, MPD::Song::GetFunction ge
 
 void seek()
 {
+	return;
+	
 	using Global::wHeader;
 	using Global::wFooter;
 	using Global::Timer;
