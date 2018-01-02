@@ -622,7 +622,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 
 	drawTitle(np);
 	
-	//if (Statusbar::isUnlocked() && Config.statusbar_visibility)
+	if (Statusbar::isUnlocked() && Config.statusbar_visibility)
 	{
 		if (Config.display_bitrate && m_kbps)
 		{
@@ -648,7 +648,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		tracklength += "]";
 		NC::WBuffer np_song;
 		
-		//std::cout << (m_elapsed_time / 10) << std::endl;
+		std::cout << playerStatus.title << std::endl;
 		
 		
 		if (Bluetooth::Player::isPlaying())
