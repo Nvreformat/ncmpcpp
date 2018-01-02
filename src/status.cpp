@@ -651,6 +651,11 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		if (Bluetooth::Player::isPlaying())
 		{			
 			np_song << stringToWstring(playerStatus.artist);
+			
+			if (!playerStatus.album.empty() && playerStatus.album != "N/A")
+				np_song << L" \"" << stringToWstring(playerStatus.album) << L"\"";
+				
+			np_song << L" " << stringToWstring(playerStatus.title);
 		}
 		else
 			Format::print(Config.song_status_wformat, np_song, &np);
