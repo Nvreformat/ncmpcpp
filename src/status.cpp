@@ -608,12 +608,6 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	unsigned currentTime = m_elapsed_time;
 	Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
 	
-	if (Bluetooth::Player::isPlaying())
-	{
-		totalTime = playerStatus.duration / 1000;
-		currentTime = playerStatus.position / 1000;
-	}
-	
 	auto np = myPlaylist->nowPlayingSong();
 	if (m_player_state == MPD::psStop || np.empty())
 	{
@@ -639,6 +633,12 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	
 	if (Statusbar::isUnlocked() && Config.statusbar_visibility)
 	{
+		if (Bluetooth::Player::isPlaying())
+		{
+			totalTime = playerStatus.duration / 1000;
+			currentTime = playerStatus.position / 1000;
+		}
+		
 		if (Config.display_bitrate && m_kbps)
 		{
 			tracklength += "(";
