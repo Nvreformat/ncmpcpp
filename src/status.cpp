@@ -635,7 +635,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			if (Config.display_remaining_time)
 			{
 				tracklength += "-";
-				tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time);
+				tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time -400);
 			}
 			else
 				tracklength += MPD::Song::ShowTime(m_elapsed_time);
@@ -655,7 +655,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			if (!playerStatus.album.empty() && playerStatus.album != "N/A")
 				np_song << L" \"" << stringToWstring(playerStatus.album) << L"\"";
 				
-			np_song << L" " << stringToWstring(playerStatus.title);
+			np_song << L" - " << stringToWstring(playerStatus.title);
 		}
 		else
 			Format::print(Config.song_status_wformat, np_song, &np);
