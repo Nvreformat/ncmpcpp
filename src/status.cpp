@@ -623,6 +623,11 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		m_elapsed_time = st.elapsedTime();
 		currentTime = m_elapsed_time;
 		m_kbps = st.kbps();
+		
+		if (Bluetooth::Player::isPlaying())
+		{
+			playerStatus.position += 1000;
+		}
 	}
 
 	std::string ps = playerStateToString(m_player_state);
