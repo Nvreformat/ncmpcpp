@@ -767,7 +767,12 @@ void DeleteStoredPlaylist::run()
 
 void ReplaySong::run()
 {
-	if (Status::State::player() != MPD::psStop)
+	if (Bluetooth::Player::isPlaying())
+	{
+		Bluetooth::Player::previous();
+		Bluetooth::Player::next();
+	}
+	else if (Status::State::player() != MPD::psStop)
 		Mpd.Seek(Status::State::currentSongPosition(), 0);
 }
 
