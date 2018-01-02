@@ -48,8 +48,6 @@ bool eventHandler(Glib::Event event, void* param)
 			if (resume)
 				Mpd.Pause__Nocheck(false);
 		}
-		
-		Statusbar::printf(2, "Bluetooth player status: %i", (int) status);
 	}
 	
 	return false;
