@@ -635,7 +635,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			if (Config.display_remaining_time)
 			{
 				tracklength += "-";
-				tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time -400);
+				tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time);
 			}
 			else
 				tracklength += MPD::Song::ShowTime(m_elapsed_time);
@@ -662,7 +662,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			
 		*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
 		writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
-		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
+		//*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
 	}
 
 	if (Progressbar::isUnlocked())
