@@ -2879,11 +2879,12 @@ void seek()
 			currentTime = playerStatus.position / 1000;
 		}
 		
-		*wFooter << NC::Format::Bold;
-		std::string tracklength;
+		
 		// FIXME: merge this with the code in status.cpp
 		
-		
+		/*
+		*wFooter << NC::Format::Bold;
+		std::string tracklength;
 		switch (Config.design)
 		{
 			case Design::Classic:
@@ -2917,6 +2918,7 @@ void seek()
 		*wFooter << NC::Format::NoBold;
 		Progressbar::draw(currentTime, totalTime);
 		wFooter->refresh();
+		*/
 	}
 	SeekingInProgress = false;
 	Mpd.Seek(Status::State::currentSongPosition(), currentTime);
