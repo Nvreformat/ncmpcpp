@@ -2834,6 +2834,9 @@ void seek()
 	auto seekForward = &Actions::get(Actions::Type::SeekForward);
 	auto seekBackward = &Actions::get(Actions::Type::SeekBackward);
 	
+	unsigned totalTime = Status::State::totalTime();
+	unsigned currentTime = songpos;
+	
 	SeekingInProgress = true;
 	while (true)
 	{
@@ -2866,8 +2869,8 @@ void seek()
 		else
 			break;
 		
-		unsigned totalTime = Status::State::totalTime();
-		unsigned currentTime = songpos;
+		totalTime = Status::State::totalTime();
+		currentTime = songpos;
 		Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
 	
 		if (Bluetooth::Player::isPlaying())
@@ -2914,7 +2917,7 @@ void seek()
 		wFooter->refresh();
 	}
 	SeekingInProgress = false;
-	Mpd.Seek(Status::State::currentSongPosition(), songpos);
+	Mpd.Seek(Status::State::currentSongPosition(), currentTime);
 	
 	wFooter->setTimeout(old_timeout);
 }
