@@ -13,6 +13,8 @@
 #include "glibsetup.h"
 #include <string>
 #include <iostream>
+#include "statusbar.h"
+#include "mpdpp.h"
 
 using namespace std;
 
@@ -120,6 +122,14 @@ namespace Bluetooth
 			}
 		}
 
+		bool mpdCheck()
+		{
+			if (isPlaying())
+				Statusbar::printf(2, "Cannot play song while using bluetooth");
+				
+			return !isPlaying();
+		}
+		
 		void onPlayerPropertyChanged(GDBusProxy* proxy, const char* name, DBusMessageIter* iter){ Glib::processIter(string(name), iter, onPlayerPropertyChangedCallback); }
 		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); }
 		void onPlayerUnloaded(GDBusProxy* proxy) { player = NULL; Glib::postEvent(Glib::Event::DEVICE_DISCONNECTED, (void*) proxy); }

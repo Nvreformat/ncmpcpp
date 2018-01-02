@@ -215,7 +215,7 @@ void Connection::UpdateDirectory(const std::string &path)
 
 void Connection::Play()
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -225,7 +225,7 @@ void Connection::Play()
 
 void Connection::Play(int pos)
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -235,7 +235,7 @@ void Connection::Play(int pos)
 
 void Connection::PlayID(int id)
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -245,7 +245,7 @@ void Connection::PlayID(int id)
 
 void Connection::Pause(bool state)
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -262,7 +262,7 @@ void Connection::Pause__Nocheck(bool state)
 
 void Connection::Toggle()
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -272,7 +272,7 @@ void Connection::Toggle()
 
 void Connection::Stop()
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -282,7 +282,7 @@ void Connection::Stop()
 
 void Connection::Next()
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();
@@ -292,7 +292,7 @@ void Connection::Next()
 
 void Connection::Prev()
 {
-	if (Bluetooth::Player::isPlaying())
+	if (!Bluetooth::Player::mpdCheck())
 		return;
 	
 	prechecksNoCommandsList();

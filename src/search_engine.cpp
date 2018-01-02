@@ -17,6 +17,7 @@
 #include "title.h"
 #include "screen_switcher.h"
 #include "screen_type.h"
+#include "bluetooth/player.h"
 
 using Global::MainHeight;
 using Global::MainStartY;
@@ -177,7 +178,7 @@ void SearchEngine::switchTo()
 		
 		if (w.size() == 1)
 		{
-			//addSongToPlaylist(w.current()->value().song(), true);
+			addSongToPlaylist(w.current()->value().song(), true);
 		}
 		else if (w.size() > 1)
 		{
@@ -236,7 +237,10 @@ bool SearchEngine::actionRunnable()
 
 void SearchEngine::runAction()
 {
-	//addSongToPlaylist(w.current()->value().song(), true);
+	if (!Bluetooth::Player::mpdCheck())
+		return;
+	
+	addSongToPlaylist(w.current()->value().song(), true);
 	m_previous_screen->switchTo();
 }
 
