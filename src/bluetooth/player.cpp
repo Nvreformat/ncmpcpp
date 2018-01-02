@@ -94,14 +94,14 @@ namespace Bluetooth
 						Glib::postEvent(Glib::Event::PLAYER_STATUS_CHANGED, (void*) status.status);
 					}
 				}
-				else if (name == "Title")
-					status.title = str;
-				else if (name == "Album")
-					status.album = str;
-				else if (name == "Artist")
-					status.artist = str;
-				else if (name == "Genre")
-					status.genre = str;
+				//else if (name == "Title")
+				//	status.title = str;
+				//else if (name == "Album")
+				//	status.album = str;
+				//else if (name == "Artist")
+				//	status.artist = str;
+				//else if (name == "Genre")
+				//	status.genre = str;
 				
 				//cout << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
 			}
