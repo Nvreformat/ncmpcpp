@@ -21,6 +21,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
+#include <string>
 
 #include "browser.h"
 #include "charset.h"
@@ -42,6 +43,7 @@
 #include "visualizer.h"
 #include "title.h"
 #include "utility/string.h"
+#include "bluetooth/player.h"
 
 using Global::myScreen;
 
@@ -608,88 +610,52 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 
 	std::string ps = playerStateToString(m_player_state);
 	std::string tracklength;
+	Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
 
 	drawTitle(np);
-	switch (Config.design)
+	
+	if (Statusbar::isUnlocked() && Config.statusbar_visibility)
 	{
-		case Design::Classic:
-			if (Statusbar::isUnlocked() && Config.statusbar_visibility)
-			{
-				if (Config.display_bitrate && m_kbps)
-				{
-					tracklength += "(";
-					tracklength += boost::lexical_cast<std::string>(m_kbps);
-					tracklength += " kbps) ";
-				}
-				tracklength += "[";
-				if (m_total_time)
-				{
-					if (Config.display_remaining_time)
-					{
-						tracklength += "-";
-						tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time);
-					}
-					else
-						tracklength += MPD::Song::ShowTime(m_elapsed_time);
-					tracklength += "/";
-					tracklength += MPD::Song::ShowTime(m_total_time);
-				}
-				else
-					tracklength += MPD::Song::ShowTime(m_elapsed_time);
-				tracklength += "]";
-				NC::WBuffer np_song;
-				Format::print(Config.song_status_wformat, np_song, &np);
-				*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
-				writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
-				*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
-			}
-			break;
-		case Design::Alternative:
+		if (Config.display_bitrate && m_kbps)
+		{
+			tracklength += "(";
+			tracklength += boost::lexical_cast<std::string>(m_kbps);
+			tracklength += " kbps) ";
+		}
+		tracklength += "[";
+		if (m_total_time)
+		{
 			if (Config.display_remaining_time)
 			{
-				tracklength = "-";
+				tracklength += "-";
 				tracklength += MPD::Song::ShowTime(m_total_time-m_elapsed_time);
 			}
 			else
-				tracklength = MPD::Song::ShowTime(m_elapsed_time);
-			if (m_total_time)
-			{
-				tracklength += "/";
-				tracklength += MPD::Song::ShowTime(m_total_time);
-			}
-			// bitrate here doesn't look good, but it can be moved somewhere else later
-			if (Config.display_bitrate && m_kbps)
-			{
-				tracklength += " (";
-				tracklength += boost::lexical_cast<std::string>(m_kbps);
-				tracklength += " kbps)";
-			}
-
-			NC::WBuffer first, second;
-			Format::print(Config.new_header_first_line, first, &np);
-			Format::print(Config.new_header_second_line, second, &np);
-
-			size_t first_len = wideLength(first.str());
-			size_t first_margin = (std::max(tracklength.length()+1, VolumeState.length()))*2;
-			size_t first_start = first_len < COLS-first_margin ? (COLS-first_len)/2 : tracklength.length()+1;
-
-			size_t second_len = wideLength(second.str());
-			size_t second_margin = (std::max(ps.length(), size_t(8))+1)*2;
-			size_t second_start = second_len < COLS-second_margin ? (COLS-second_len)/2 : ps.length()+1;
-
-			if (!Global::SeekingInProgress)
-				*wHeader << NC::XY(0, 0) << NC::TermManip::ClearToEOL << tracklength;
-			*wHeader << NC::XY(first_start, 0);
-			writeCyclicBuffer(first, *wHeader, first_line_scroll_begin, COLS-tracklength.length()-VolumeState.length()-1, L" ** ");
-
-			*wHeader << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << NC::Format::NoBold;
-			*wHeader << NC::XY(second_start, 1);
-			writeCyclicBuffer(second, *wHeader, second_line_scroll_begin, COLS-ps.length()-8-2, L" ** ");
-
-			*wHeader << NC::XY(wHeader->getWidth()-VolumeState.length(), 0) << Config.volume_color << VolumeState << NC::Color::End;
-
-			flags();
+				tracklength += MPD::Song::ShowTime(m_elapsed_time);
+			tracklength += "/";
+			tracklength += MPD::Song::ShowTime(m_total_time);
+		}
+		else
+			tracklength += MPD::Song::ShowTime(m_elapsed_time);
+		tracklength += "]";
+		NC::WBuffer np_song;
+		
+		
+		
+		Format::print(Config.song_status_wformat, np_song, &np);
+		*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
+		if (Bluetooth::Player::isPlaying())
+		{
+			std::string t = playerStatus.artist;
+			std::wstring str(t.begin(), t.end());
+			
+			np_song << str.c_str();
+		}
+		else
+			writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
+		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
 	}
+
 	if (Progressbar::isUnlocked())
 		Progressbar::draw(m_elapsed_time, m_total_time);
 }
