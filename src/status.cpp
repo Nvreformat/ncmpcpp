@@ -646,7 +646,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			std::string t = playerStatus.artist;
 			std::wstring str(t.begin(), t.end());
 			
-			np_song << str.c_str();
+			np_song << str;
 		}
 		else
 			Format::print(Config.song_status_wformat, np_song, &np);
