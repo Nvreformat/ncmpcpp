@@ -645,6 +645,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			tracklength += boost::lexical_cast<std::string>(m_kbps);
 			tracklength += " kbps) ";
 		}
+		
 		tracklength += "[";
 		if (totalTime)
 		{

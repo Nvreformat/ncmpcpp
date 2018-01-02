@@ -64,6 +64,7 @@
 #include "visualizer.h"
 #include "title.h"
 #include "tags.h"
+#include "bluetooth/player.h"
 
 #ifdef HAVE_TAGLIB_H
 # include "fileref.h"
@@ -2865,6 +2866,16 @@ void seek()
 		else
 			break;
 		
+		unsigned totalTime = Status::State::totalTime();
+		unsigned currentTime = songpos;
+		Bluetooth::Player::Status playerStatus = Bluetooth::Player::getStatus();
+	
+		if (Bluetooth::Player::isPlaying())
+		{
+			totalTime = playerStatus.duration / 1000;
+			currentTime = playerStatus.position / 1000;
+		}
+		
 		*wFooter << NC::Format::Bold;
 		std::string tracklength;
 		// FIXME: merge this with the code in status.cpp
@@ -2875,12 +2886,12 @@ void seek()
 				if (Config.display_remaining_time)
 				{
 					tracklength += "-";
-					tracklength += MPD::Song::ShowTime(Status::State::totalTime()-songpos);
+					tracklength += MPD::Song::ShowTime(totalTime-currentTime);
 				}
 				else
-					tracklength += MPD::Song::ShowTime(songpos);
+					tracklength += MPD::Song::ShowTime(currentTime);
 				tracklength += "/";
-				tracklength += MPD::Song::ShowTime(Status::State::totalTime());
+				tracklength += MPD::Song::ShowTime(totalTime);
 				tracklength += "]";
 				*wFooter << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength;
 				break;
@@ -2888,18 +2899,18 @@ void seek()
 				if (Config.display_remaining_time)
 				{
 					tracklength = "-";
-					tracklength += MPD::Song::ShowTime(Status::State::totalTime()-songpos);
+					tracklength += MPD::Song::ShowTime(totalTime-currentTime);
 				}
 				else
-					tracklength = MPD::Song::ShowTime(songpos);
+					tracklength = MPD::Song::ShowTime(currentTime);
 				tracklength += "/";
-				tracklength += MPD::Song::ShowTime(Status::State::totalTime());
+				tracklength += MPD::Song::ShowTime(totalTime);
 				*wHeader << NC::XY(0, 0) << tracklength << " ";
 				wHeader->refresh();
 				break;
 		}
 		*wFooter << NC::Format::NoBold;
-		Progressbar::draw(songpos, Status::State::totalTime());
+		Progressbar::draw(currentTime, totalTime);
 		wFooter->refresh();
 	}
 	SeekingInProgress = false;
