@@ -641,9 +641,6 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		NC::WBuffer np_song;
 		
 		
-		
-		Format::print(Config.song_status_wformat, np_song, &np);
-		*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
 		if (Bluetooth::Player::isPlaying())
 		{
 			std::string t = playerStatus.artist;
@@ -652,7 +649,10 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			np_song << str.c_str();
 		}
 		else
-			writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
+			Format::print(Config.song_status_wformat, np_song, &np);
+			
+		*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
+		writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
 		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
 	}
 
