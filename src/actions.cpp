@@ -773,17 +773,26 @@ void ReplaySong::run()
 
 void PreviousSong::run()
 {
-	Mpd.Prev();
+	if (Bluetooth::Player::isPlaying())
+		Bluetooth::Player::previous();
+	else
+		Mpd.Prev();
 }
 
 void NextSong::run()
 {
-	Mpd.Next();
+	if (Bluetooth::Player::isPlaying())
+		Bluetooth::Player::next();
+	else
+		Mpd.Next();
 }
 
 void Pause::run()
 {
-	Mpd.Toggle();
+	if (Bluetooth::Player::isPlaying())
+		Bluetooth::Player::pause();
+	else
+		Mpd.Toggle();
 }
 
 void SavePlaylist::run()
