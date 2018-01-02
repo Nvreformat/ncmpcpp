@@ -54,6 +54,8 @@ using Global::wHeader;
 using Global::Timer;
 using Global::VolumeState;
 
+using namespace std;
+
 namespace {
 
 boost::posix_time::ptime past = boost::posix_time::from_time_t(0);
@@ -616,6 +618,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL;
 		return;
 	}
+	
+	cerr << "a" << endl;
 
 	if (update_elapsed)
 	{
@@ -626,6 +630,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		
 		if (Bluetooth::Player::isPlaying())
 		{
+			cerr << "b" << endl;
+			
 			playerStatus.position += 1000;
 		}
 	}
