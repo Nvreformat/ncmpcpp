@@ -590,6 +590,13 @@ void Status::Changes::songID(int song_id)
 	elapsedTime(false);
 }
 
+std::wstring stringToWstring(std::string t)
+{
+	std::wstring str(t.begin(), t.end());
+	
+	return str;
+}
+
 void Status::Changes::elapsedTime(bool update_elapsed)
 {
 	auto np = myPlaylist->nowPlayingSong();
@@ -642,11 +649,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		
 		
 		if (Bluetooth::Player::isPlaying())
-		{
-			std::string t = playerStatus.artist;
-			std::wstring str(t.begin(), t.end());
-			
-			np_song << str;
+		{			
+			np_song << stringToWstring(playerStatus.artist);
 		}
 		else
 			Format::print(Config.song_status_wformat, np_song, &np);
@@ -659,6 +663,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	if (Progressbar::isUnlocked())
 		Progressbar::draw(m_elapsed_time, m_total_time);
 }
+
+
 
 void Status::Changes::flags()
 {
