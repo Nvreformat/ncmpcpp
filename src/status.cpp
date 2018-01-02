@@ -227,11 +227,11 @@ void Status::trace(bool update_timer, bool update_window_timeout)
 		if (!m_status_initialized)
 			initialize_status();
 
-		if (m_player_state == MPD::psPlay
-		&&  Global::Timer - past > boost::posix_time::seconds(1))
+		if (Global::Timer - past > boost::posix_time::seconds(1))
 		{
 			// update elapsed time/bitrate of the current song
 			Status::Changes::elapsedTime(true);
+			
 			wFooter->refresh();
 			past = Timer;
 		}
@@ -604,6 +604,8 @@ std::wstring stringToWstring(std::string t)
 
 void Status::Changes::elapsedTime(bool update_elapsed)
 {
+	
+	
 	auto np = myPlaylist->nowPlayingSong();
 	if (m_player_state == MPD::psStop || np.empty())
 	{
@@ -652,7 +654,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		tracklength += "]";
 		NC::WBuffer np_song;
 		
-		//std::cout << playerStatus.title << std::endl;
+		
 		
 		
 		if (Bluetooth::Player::isPlaying())
