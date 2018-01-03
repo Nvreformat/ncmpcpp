@@ -33,6 +33,7 @@ namespace Bluetooth
 			PlayerStatus status = STOPPED;
 		};
 		
+		void onPlayerPropertyChangedCallback(std::string name, int type, void* value);
 		void onPlayerLoaded(GDBusProxy* proxy);
 		void onPlayerUnloaded(GDBusProxy* proxy);
 		void onPlayerPropertyChanged(GDBusProxy* proxy, const char* name, DBusMessageIter* iter);

@@ -82,7 +82,7 @@ namespace Glib
 
 			//update_properties(proxy, &iter, FALSE);
 			cerr << "succ: " << endl;
-			
+			Glib::processIter(string("DFSD"), &iter, Bluetooth::Player::onPlayerPropertyChangedCallback);
 		}
 
 		void get_all_properties(GDBusProxy *proxy)
