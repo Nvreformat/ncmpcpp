@@ -18,9 +18,9 @@ namespace Bluetooth
 		{
 			public:
 			
-			std::string title = "N/A";
-			std::string album = "N/A";
-			std::string artist = "N/A";
+			std::string title = "N/Adfsgsdfgdsfgsdfgdsfgsdfgdsfgfdsgdfsgsdfgdsfgsdfgfdsg";
+			std::string album = "N/Asdfgsdfgsdfgdsfgdfsgsdfgsdfgdsfgdsfgdfsgsdfgsdfgfs";
+			std::string artist = "N/Agdfsgdsfgdsfgdsfgdsfgsdfgsdgsdfg";
 			std::string genre = "N/A";
 			
 			int trackNumber = 0;
