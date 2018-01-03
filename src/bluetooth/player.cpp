@@ -22,6 +22,8 @@ namespace Bluetooth
 {
 	namespace Player
 	{
+		boost::mutex io_mutex;
+		
 		GDBusProxy* player = NULL;
 		Status status;
 		
@@ -73,6 +75,8 @@ namespace Bluetooth
 		
 		void onPlayerPropertyChangedCallback(string name, int type, void* value)
 		{
+			io_mutex.lock();
+			
 			if (type == DBUS_TYPE_STRING)
 			{
 				string str = string((char*) value);
@@ -94,14 +98,14 @@ namespace Bluetooth
 						Glib::postEvent(Glib::Event::PLAYER_STATUS_CHANGED, (void*) status.status);
 					}
 				}
-				//else if (name == "Title")
-				//	status.title = str;
-				//else if (name == "Album")
-				//	status.album = str;
-				//else if (name == "Artist")
-				//	status.artist = str;
-				//else if (name == "Genre")
-				//	status.genre = str;
+				else if (name == "Title")
+					status.title = str;
+				else if (name == "Album")
+					status.album = str;
+				else if (name == "Artist")
+					status.artist = str;
+				else if (name == "Genre")
+					status.genre = str;
 				
 				//cout << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
 			}
@@ -120,6 +124,8 @@ namespace Bluetooth
 					
 				//cout << "" << status.position << " " << status.duration << " " << status.trackNumber << " " << status.trackCount << " " << endl;
 			}
+			
+			io_mutex.unlock();
 		}
 
 		bool mpdCheck()

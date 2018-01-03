@@ -642,6 +642,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 
 	drawTitle(np);
 	
+	Bluetooth::Player::io_mutex.lock();
+	
 	if (Statusbar::isUnlocked() && Config.statusbar_visibility)
 	{
 		if (Bluetooth::Player::isPlaying())
@@ -692,6 +694,8 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
 		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
 	}
+	
+	Bluetooth::Player::io_mutex.unlock();
 
 	cerr << "d " <<  playerStatus.position << endl;
 
