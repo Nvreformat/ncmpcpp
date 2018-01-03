@@ -21,9 +21,29 @@ namespace Glib
 	pthread_t glibThread;
 	GMainLoop* mainLoop;
 	DBusConnection* dbusConnection;
+	GDBusClient* client;
 	boost::lockfree::queue<PendingEvent> pendingEvents(128);
 
-	void onConnect(DBusConnection* connection, void* userData) {}
+	void onConnect(DBusConnection* connection, void* userData)
+	{
+		/*
+		result = g_dbus_connection_call_sync(bus,
+			"org.mpris.MediaPlayer2.spotify",
+			"/org/mpris/MediaPlayer2",
+			"org.freedesktop.DBus.Properties",
+			"Get",
+			g_variant_new("(ss)",
+			"org.mpris.MediaPlayer2.Player",
+			"Metadata"),
+			G_VARIANT_TYPE("(v)"),
+			G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
+			*/
+		
+		GDBusProxy* proxy = g_dbus_proxy_new(client, "/org/freedesktop/DBus", "org.freedesktop.DBus.Properties");
+		
+		cerr << "done" << endl;
+	}
+	
 	void onDisconnect(DBusConnection* connection, void* serData) {}
 
 	gboolean onSignal(GIOChannel* channel, GIOCondition condition, gpointer userData)
@@ -246,7 +266,7 @@ namespace Glib
 		dbusConnection = g_dbus_setup_bus(DBUS_BUS_SYSTEM, NULL, NULL);
 		guint input = setupInput();
 		guint signal = setupSignal();
-		GDBusClient* client = g_dbus_client_new(dbusConnection, "org.bluez", "/org/bluez");
+		client = g_dbus_client_new(dbusConnection, "org.bluez", "/org/bluez");
 
 		g_dbus_client_set_connect_watch(client, onConnect, NULL);
 		g_dbus_client_set_disconnect_watch(client, onDisconnect, NULL);
