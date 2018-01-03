@@ -24,6 +24,30 @@ namespace Glib
 	GDBusClient* client;
 	boost::lockfree::queue<PendingEvent> pendingEvents(128);
 
+	void request_default_setup(DBusMessageIter* iter, void* userData)
+	{
+		const char* path = "/org/bluez/MediaPlayer1";
+
+		dbus_message_iter_append_basic(iter, DBUS_TYPE_OBJECT_PATH, &path);
+	}
+
+	void request_default_reply(DBusMessage* message, void* userData)
+	{
+		DBusError error;
+
+		dbus_error_init(&error);
+
+		if (dbus_set_error_from_message(&error, message) == TRUE)
+		{
+			cerr << "Failed: " << error.name << endl;
+			//printf("Failed to request default agent: %s\n", error.name);
+			dbus_error_free(&error);
+			return;
+		}
+
+		cerr << "Success" << endl;
+	}
+
 	void onConnect(DBusConnection* connection, void* userData)
 	{
 		/*
@@ -41,7 +65,13 @@ namespace Glib
 		
 		GDBusProxy* proxy = g_dbus_proxy_new(client, "/org/freedesktop/DBus", "org.freedesktop.DBus.Properties");
 		
-		cerr << "done " << proxy  << endl;
+		if (g_dbus_proxy_method_call(proxy, "GetAll", request_default_setup, request_default_reply, NULL, NULL) == FALSE)
+		{
+			cerr << "Failed" << endl;
+			return;
+		}
+		
+		//cerr << "done " << proxy  << endl;
 	}
 	
 	void onDisconnect(DBusConnection* connection, void* serData) {}
