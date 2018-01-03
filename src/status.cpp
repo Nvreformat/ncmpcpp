@@ -545,7 +545,6 @@ void Status::Changes::playerState()
 		else
 			*wFooter << NC::Format::Bold << state << NC::Format::NoBold;
 	}
-	wFooter->refresh();
 
 	// needed for immediate display after starting
 	// player from stopped state or seeking
@@ -694,6 +693,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		*wFooter << NC::XY(0, 1) << NC::TermManip::ClearToEOL << NC::Format::Bold << ps << ' ' << NC::Format::NoBold;
 		writeCyclicBuffer(np_song, *wFooter, playing_song_scroll_begin, wFooter->getWidth()-ps.length()-tracklength.length()-2, L" ** ");
 		*wFooter << NC::Format::Bold << NC::XY(wFooter->getWidth()-tracklength.length(), 1) << tracklength << NC::Format::NoBold;
+		wFooter->refresh();
 	}
 	
 	Bluetooth::Player::io_mutex.unlock();
