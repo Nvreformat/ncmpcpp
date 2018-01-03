@@ -16,6 +16,43 @@
 
 using namespace std;
 
+struct GDBusClient {
+	int ref_count;
+	DBusConnection *dbus_conn;
+	char *service_name;
+	char *base_path;
+	guint watch;
+	guint added_watch;
+	guint removed_watch;
+	GPtrArray *match_rules;
+	DBusPendingCall *pending_call;
+	DBusPendingCall *get_objects_call;
+	GDBusWatchFunction connect_func;
+	void *connect_data;
+	GDBusWatchFunction disconn_func;
+	void *disconn_data;
+	GDBusMessageFunction signal_func;
+	void *signal_data;
+	GDBusProxyFunction proxy_added;
+	GDBusProxyFunction proxy_removed;
+	GDBusPropertyFunction property_changed;
+	void *user_data;
+	GList *proxy_list;
+};
+
+struct GDBusProxy {
+	int ref_count;
+	GDBusClient *client;
+	char *obj_path;
+	char *interface;
+	GHashTable *prop_list;
+	guint watch;
+	GDBusPropertyFunction prop_func;
+	void *prop_data;
+	GDBusProxyFunction removed_func;
+	void *removed_data;
+};
+
 namespace Glib
 {
 	pthread_t glibThread;
@@ -23,6 +60,63 @@ namespace Glib
 	DBusConnection* dbusConnection;
 	GDBusClient* client;
 	boost::lockfree::queue<PendingEvent> pendingEvents(128);
+
+		static void get_all_properties_reply(DBusPendingCall *call, void *user_data)
+		{
+			DBusMessage *reply = dbus_pending_call_steal_reply(call);
+			DBusMessageIter iter;
+			DBusError error;
+
+			dbus_error_init(&error);
+
+			if (dbus_set_error_from_message(&error, reply) == TRUE) {
+				dbus_error_free(&error);
+				dbus_message_unref(reply);
+
+				g_dbus_client_unref(client);
+				
+				cerr << "err2: " << endl;
+			}
+
+			dbus_message_iter_init(reply, &iter);
+
+			//update_properties(proxy, &iter, FALSE);
+			cerr << "succ: " << endl;
+			
+		}
+
+		void get_all_properties(GDBusProxy *proxy)
+		{
+			const char *service_name = client->service_name;
+			DBusMessage *msg;
+			DBusPendingCall *call;
+
+			msg = dbus_message_new_method_call(service_name, proxy->obj_path,
+							DBUS_INTERFACE_PROPERTIES, "GetAll");
+							
+			cerr << "msg: " << msg << endl;
+			if (msg == NULL)
+				return;
+
+			dbus_message_append_args(msg, DBUS_TYPE_STRING, &proxy->interface,
+									DBUS_TYPE_INVALID);
+
+			if (g_dbus_send_message_with_reply(dbusConnection, msg,
+									&call, -1) == FALSE) {
+				dbus_message_unref(msg);
+				
+				cerr << "err: " << msg << endl;
+				return;
+			}
+
+			g_dbus_client_ref(client);
+
+			dbus_pending_call_set_notify(call, get_all_properties_reply,
+									proxy, NULL);
+			dbus_pending_call_unref(call);
+
+			dbus_message_unref(msg);
+		}
 
 	void request_default_setup(DBusMessageIter* iter, void* userData)
 	{

@@ -153,7 +153,7 @@ namespace Bluetooth
 		}
 		
 		void onPlayerPropertyChanged(GDBusProxy* proxy, const char* name, DBusMessageIter* iter){ Glib::processIter(string(name), iter, onPlayerPropertyChangedCallback); }
-		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); get_all_properties(proxy); }
+		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); Glib::get_all_properties(proxy); }
 		void onPlayerUnloaded(GDBusProxy* proxy) { player = NULL; Glib::postEvent(Glib::Event::DEVICE_DISCONNECTED, (void*) proxy); }
 		GDBusProxy* getPlayer() { return player; }
 		bool isPlaying() { return player != NULL && status.status == PLAYING; }

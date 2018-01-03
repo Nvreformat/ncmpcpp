@@ -306,7 +306,7 @@ done:
 	g_dbus_client_unref(client);
 }
 
-void get_all_properties(GDBusProxy *proxy)
+static void get_all_properties(GDBusProxy *proxy)
 {
 	GDBusClient *client = proxy->client;
 	const char *service_name = client->service_name;

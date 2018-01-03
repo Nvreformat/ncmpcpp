@@ -26,6 +26,7 @@ namespace Glib
 	
 	extern boost::lockfree::queue<PendingEvent> pendingEvents;
 	
+	void get_all_properties(GDBusProxy *proxy);
 	void postEvent(Event event, void* param);
 	void setup();
 	DBusConnection* getDbusConnection();
