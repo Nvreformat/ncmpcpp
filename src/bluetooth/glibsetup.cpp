@@ -41,7 +41,7 @@ namespace Glib
 		
 		GDBusProxy* proxy = g_dbus_proxy_new(client, "/org/freedesktop/DBus", "org.freedesktop.DBus.Properties");
 		
-		cerr << "done" << endl;
+		cerr << "done " << proxy  << endl;
 	}
 	
 	void onDisconnect(DBusConnection* connection, void* serData) {}
