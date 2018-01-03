@@ -73,6 +73,15 @@ namespace Bluetooth
 			g_dbus_proxy_method_call(player, "Next", NULL, dbusCallback, (char*) "NEXT", NULL);
 		}
 		
+		bool invalidChar (char c) 
+		{  
+			return !(c>=0 && c <128);   
+		} 
+		void stripUnicode(string & str) 
+		{ 
+			str.erase(remove_if(str.begin(),str.end(), invalidChar), str.end());  
+		}
+		
 		void onPlayerPropertyChangedCallback(string name, int type, void* value)
 		{
 			io_mutex.lock();
@@ -106,6 +115,11 @@ namespace Bluetooth
 					status.artist = str;
 				else if (name == "Genre")
 					status.genre = str;
+					
+				stripUnicode(status.title);
+				stripUnicode(status.album);
+				stripUnicode(status.artist);
+				stripUnicode(status.genre);
 				
 				//cout << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
 			}
