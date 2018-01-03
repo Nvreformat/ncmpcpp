@@ -139,7 +139,7 @@ std::string playerStateToString(MPD::PlayerState ps)
 	}
 	
 	if (Bluetooth::Player::isPlaying())
-		result = "Playing:";
+		result = "[B] Playing:";
 	
 	return result;
 }
