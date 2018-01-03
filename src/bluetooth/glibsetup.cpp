@@ -157,13 +157,6 @@ namespace Glib
 			G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
 			*/
 		
-		GDBusProxy* proxy = g_dbus_proxy_new(client, "/org/freedesktop/DBus", "org.freedesktop.DBus.Properties");
-		
-		if (g_dbus_proxy_method_call(proxy, "GetAll", request_default_setup, request_default_reply, NULL, NULL) == FALSE)
-		{
-			cerr << "Failed" << endl;
-			return;
-		}
 		
 		//cerr << "done " << proxy  << endl;
 	}
