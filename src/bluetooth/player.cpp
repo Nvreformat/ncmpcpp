@@ -18,6 +18,8 @@
 
 using namespace std;
 
+void get_all_properties(GDBusProxy *proxy);
+
 namespace Bluetooth
 {
 	namespace Player
@@ -121,7 +123,7 @@ namespace Bluetooth
 				stripUnicode(status.artist);
 				stripUnicode(status.genre);
 				
-				//cout << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
+				cerr << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
 			}
 			else if (type == DBUS_TYPE_UINT32)
 			{
@@ -136,7 +138,7 @@ namespace Bluetooth
 				else if (name == "NumberOfTracks")
 					status.trackCount = uintValue;
 					
-				//cout << "" << status.position << " " << status.duration << " " << status.trackNumber << " " << status.trackCount << " " << endl;
+				cerr << "" << status.position << " " << status.duration << " " << status.trackNumber << " " << status.trackCount << " " << endl;
 			}
 			
 			io_mutex.unlock();
@@ -151,7 +153,7 @@ namespace Bluetooth
 		}
 		
 		void onPlayerPropertyChanged(GDBusProxy* proxy, const char* name, DBusMessageIter* iter){ Glib::processIter(string(name), iter, onPlayerPropertyChangedCallback); }
-		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); }
+		void onPlayerLoaded(GDBusProxy* proxy) { player = proxy; Glib::postEvent(Glib::Event::DEVICE_CONNECTED, (void*) proxy); get_all_properties(proxy); }
 		void onPlayerUnloaded(GDBusProxy* proxy) { player = NULL; Glib::postEvent(Glib::Event::DEVICE_DISCONNECTED, (void*) proxy); }
 		GDBusProxy* getPlayer() { return player; }
 		bool isPlaying() { return player != NULL && status.status == PLAYING; }
