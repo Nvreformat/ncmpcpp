@@ -26,9 +26,9 @@ namespace Glib
 
 	void request_default_setup(DBusMessageIter* iter, void* userData)
 	{
-		const char* path = "/org/bluez/MediaPlayer1";
+		const char* path = "org.bluez.MediaPlayer1";
 
-		dbus_message_iter_append_basic(iter, DBUS_TYPE_OBJECT_PATH, &path);
+		dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &path);
 	}
 
 	void request_default_reply(DBusMessage* message, void* userData)
