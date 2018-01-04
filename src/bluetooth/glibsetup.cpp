@@ -61,106 +61,58 @@ namespace Glib
 	GDBusClient* client;
 	boost::lockfree::queue<PendingEvent> pendingEvents(128);
 
-		static void get_all_properties_reply(DBusPendingCall *call, void *user_data)
-		{
-			DBusMessage *reply = dbus_pending_call_steal_reply(call);
-			DBusMessageIter iter;
-			DBusError error;
-
-			dbus_error_init(&error);
-
-			if (dbus_set_error_from_message(&error, reply) == TRUE) {
-				dbus_error_free(&error);
-				dbus_message_unref(reply);
-
-				g_dbus_client_unref(client);
-				
-				cerr << "err2: " << endl;
-			}
-
-			dbus_message_iter_init(reply, &iter);
-
-			//update_properties(proxy, &iter, FALSE);
-			cerr << "succ: " << endl;
-			Glib::processIter(string("DFSD"), &iter, Bluetooth::Player::onPlayerPropertyChangedCallback);
-		}
-
-		void get_all_properties(GDBusProxy *proxy)
-		{
-			const char *service_name = client->service_name;
-			DBusMessage *msg;
-			DBusPendingCall *call;
-
-			msg = dbus_message_new_method_call(service_name, proxy->obj_path,
-							DBUS_INTERFACE_PROPERTIES, "GetAll");
-							
-			cerr << "msg: " << msg << endl;
-			if (msg == NULL)
-				return;
-
-			dbus_message_append_args(msg, DBUS_TYPE_STRING, &proxy->interface,
-									DBUS_TYPE_INVALID);
-
-			if (g_dbus_send_message_with_reply(dbusConnection, msg,
-									&call, -1) == FALSE) {
-				dbus_message_unref(msg);
-				
-				cerr << "err: " << msg << endl;
-				return;
-			}
-
-			g_dbus_client_ref(client);
-
-			dbus_pending_call_set_notify(call, get_all_properties_reply,
-									proxy, NULL);
-			dbus_pending_call_unref(call);
-
-			dbus_message_unref(msg);
-		}
-
-	void request_default_setup(DBusMessageIter* iter, void* userData)
+	static void get_all_properties_reply(DBusPendingCall *call, void *user_data)
 	{
-		const char* path = "org.bluez.MediaPlayer1";
-
-		dbus_message_iter_append_basic(iter, DBUS_TYPE_STRING, &path);
-	}
-
-	void request_default_reply(DBusMessage* message, void* userData)
-	{
+		DBusMessage *reply = dbus_pending_call_steal_reply(call);
+		DBusMessageIter iter;
 		DBusError error;
 
 		dbus_error_init(&error);
 
-		if (dbus_set_error_from_message(&error, message) == TRUE)
-		{
-			cerr << "Failed: " << error.name << endl;
-			//printf("Failed to request default agent: %s\n", error.name);
+		if (dbus_set_error_from_message(&error, reply) == TRUE) {
 			dbus_error_free(&error);
+			dbus_message_unref(reply);
+
+			g_dbus_client_unref(client);
+		}
+
+		dbus_message_iter_init(reply, &iter);
+
+		Glib::processIter(string("DFSD"), &iter, Bluetooth::Player::onPlayerPropertyChangedCallback);
+	}
+
+	void get_all_properties(GDBusProxy *proxy)
+	{
+		const char *service_name = client->service_name;
+		DBusMessage *msg;
+		DBusPendingCall *call;
+
+		msg = dbus_message_new_method_call(service_name, proxy->obj_path,
+						DBUS_INTERFACE_PROPERTIES, "GetAll");
+							
+		if (msg == NULL)
+			return;
+
+		dbus_message_append_args(msg, DBUS_TYPE_STRING, &proxy->interface,
+								DBUS_TYPE_INVALID);
+
+		if (g_dbus_send_message_with_reply(dbusConnection, msg,
+								&call, -1) == FALSE) {
+			dbus_message_unref(msg);
+			
 			return;
 		}
 
-		cerr << "Success" << endl;
+		g_dbus_client_ref(client);
+
+		dbus_pending_call_set_notify(call, get_all_properties_reply,
+									proxy, NULL);
+		dbus_pending_call_unref(call);
+
+		dbus_message_unref(msg);
 	}
 
-	void onConnect(DBusConnection* connection, void* userData)
-	{
-		/*
-		result = g_dbus_connection_call_sync(bus,
-			"org.mpris.MediaPlayer2.spotify",
-			"/org/mpris/MediaPlayer2",
-			"org.freedesktop.DBus.Properties",
-			"Get",
-			g_variant_new("(ss)",
-			"org.mpris.MediaPlayer2.Player",
-			"Metadata"),
-			G_VARIANT_TYPE("(v)"),
-			G_DBUS_CALL_FLAGS_NONE, -1, NULL, &error);
-			*/
-		
-		
-		//cerr << "done " << proxy  << endl;
-	}
-	
+	void onConnect(DBusConnection* connection, void* userData){}
 	void onDisconnect(DBusConnection* connection, void* serData) {}
 
 	gboolean onSignal(GIOChannel* channel, GIOCondition condition, gpointer userData)
@@ -302,7 +254,7 @@ namespace Glib
 			processIter(valstr, &subiter, callback);
 			break;
 		default:
-			cout << name << " has unsupported type" << endl;
+			//cout << name << " has unsupported type" << endl;
 			break;
 		}
 	}

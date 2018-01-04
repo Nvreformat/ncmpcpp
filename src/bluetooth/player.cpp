@@ -123,7 +123,7 @@ namespace Bluetooth
 				stripUnicode(status.artist);
 				stripUnicode(status.genre);
 				
-				cerr << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
+				//cerr << "" << status.status << " " << status.title << " " << status.album << " " << status.artist << " " << status.genre << " " << endl;
 			}
 			else if (type == DBUS_TYPE_UINT32)
 			{
@@ -138,7 +138,7 @@ namespace Bluetooth
 				else if (name == "NumberOfTracks")
 					status.trackCount = uintValue;
 					
-				cerr << "" << status.position << " " << status.duration << " " << status.trackNumber << " " << status.trackCount << " " << endl;
+				//cerr << "" << status.position << " " << status.duration << " " << status.trackNumber << " " << status.trackCount << " " << endl;
 			}
 			
 			io_mutex.unlock();

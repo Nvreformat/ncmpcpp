@@ -627,13 +627,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 		m_kbps = st.kbps();
 		
 		if (Bluetooth::Player::isPlaying())
-		{
-			cerr << "b " <<  playerStatus.position << endl;
-			
 			playerStatus.position += 1000;
-			
-			cerr << "c " <<  playerStatus.position << endl;
-		}
 	}
 
 	std::string ps = playerStateToString(m_player_state);
@@ -697,9 +691,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	}
 	
 	Bluetooth::Player::io_mutex.unlock();
-
-	cerr << "d " <<  playerStatus.position << endl;
-
+	
 	if (Progressbar::isUnlocked())
 		Progressbar::draw(currentTime, totalTime);
 }
