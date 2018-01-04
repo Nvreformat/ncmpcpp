@@ -266,9 +266,16 @@ namespace Bluetooth
 		}
 	}
 	
+	void onDeviceLoaded(GDBusProxy* proxy)
+	{
+		dbus_bool_t trusted = 1;
+		
+		g_dbus_proxy_set_property_basic(proxy, "Trusted", DBUS_TYPE_BOOLEAN, &trusted, generic_callback, NULL, g_free);
+		device = proxy;
+	}
+	
 	void onDevicePropertyChanged(GDBusProxy* proxy, const char* name, DBusMessageIter* iter) { Glib::processIter(string(name), iter, onDevicePropertyChangedCallback); }
 	void onAdapterPropertyChanged(GDBusProxy* proxy, const char* name, DBusMessageIter* iter) { Glib::processIter(string(name), iter, onAdapterPropertyChangedCallback); }
-	void onDeviceLoaded(GDBusProxy* proxy) { device = proxy; }
 	void onAdapterLoaded(GDBusProxy* proxy) { adapter = proxy; }
 	void onAgentManagerLoaded(GDBusProxy* proxy) { agentManager = proxy; setAgentEnabled(true); }
 	void onDeviceUnloaded(GDBusProxy* proxy) { device = NULL; }
