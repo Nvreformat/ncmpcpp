@@ -229,7 +229,7 @@ void Status::trace(bool update_timer, bool update_window_timeout)
 		if (!m_status_initialized)
 			initialize_status();
 
-		if (Global::Timer - past > boost::posix_time::seconds(1))
+		if ((m_player_state == MPD::psPlay or Bluetooth::Player::isPlaying()) && Global::Timer - past > boost::posix_time::seconds(1))
 		{
 			// update elapsed time/bitrate of the current song
 			Status::Changes::elapsedTime(true);
@@ -611,7 +611,7 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	Bluetooth::Player::Status& playerStatus = Bluetooth::Player::getStatus();
 	
 	auto np = myPlaylist->nowPlayingSong();
-	if (m_player_state == MPD::psStop || np.empty())
+	if ((m_player_state == MPD::psStop || np.empty()) && !Bluetooth::Player::isPlaying())
 	{
 		// MPD is not playing, clear statusbar and exit.
 		if (Statusbar::isUnlocked() && Config.statusbar_visibility)
